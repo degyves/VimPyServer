@@ -1,0 +1,97 @@
+== VimPyServer.txt A Python server to remote control Vim from telnet or netcat
+== without X-Windows nor vim-server.
+
+Author:         Victor Polo de Gyves Montero <degyves@gmail.com>
+License:        BSD
+Website:        http://github.com/degyves/VimPyServer
+Version:        0.1
+
+=== Contents
+
+  1. Intro 
+  2. Requirements 
+  3. Installation 
+  4. Usage 
+  5. Configuration 
+
+=== 1. Intro
+
+This is a plugin for controlling your vim editor by starting a Python server
+inside it until you quit vim. This is an alternative to "vim -servername", 
+which I could not use on a terminal only environment. 
+
+Whit Vim-PyServer you can:
+
+Integrate your Cygwin-based Vim editor with Windows Explorer and edit every 
+  file on a single vim instance!
+
+Send commands to you current open vim editor from another terminal, 
+  even from another computer! 
+
+Remotely control your current open vim editor, integrate it on an IDE
+  automate actions!
+
+=== 2. Requirements
+
+- VIM 7.4 with python and python3 (check it with vim --version)
+- Python 2.7.8 (Should work on Python 3. Please send me a message if you
+  test it with version 3.
+
+=== 3. Installation
+
+Clone it to your .vim/bundle:
+  
+----
+  git clone https://github.com/degyves/VimPyServer.git
+----
+
+That's it! Vim-PyServer will start for the first vim editor you use.
+  If you open several vim editors, only the first one will be controlled
+  by the PyServer. This will be changed later so any vim editor will have
+  its own PyServer.
+
+=== 4. Usage
+
+You can send only one command per time. VimPyServer will remove spaces,
+newlines and tabs from the beginning and end of the command.
+
+Send a command from another terminal to your vim editor, 
+  controlled by VimPyServer. This will open ~/.bashrc.
+
+----
+  $ echo "e ~/.bashrc" | nc localhost 9876
+----
+
+Turn off VimPyServer:
+
+----
+  :call CloseVimPyServer()
+----
+
+Turn on VimPyServer:
+
+----
+  :call OpenVimPyServer()
+----
+
+=== 5. Configuration
+
+The following variables can be set on your ~/.vimrc:
+
+Set this to disable the automatic start of VimPyServer:
+
+----
+  let g:VimPyServer_autostart=0
+----
+
+Set this to change the default port (9876 by default). It must be an integer:
+
+----
+  let g:VimPyServer_port=9876
+----
+
+Set this to change the default host ('127.0.0.1' by default). Must be string:
+
+----
+  let g:VimPyServer_host='127.0.0.1'
+----
