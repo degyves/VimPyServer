@@ -22,7 +22,7 @@ This is a plugin for controlling your vim editor by starting a Python server
 inside it until you quit vim. This is an alternative to "vim -servername", 
 which I could not use on a terminal only environment. 
 
-Whit Vim-PyServer you can:
+Whit VimPyServer you can:
 
 Integrate your Cygwin-based Vim editor with Windows Explorer and edit every 
   file on a single vim instance!
@@ -47,7 +47,7 @@ Clone it to your .vim/bundle:
   git clone https://github.com/degyves/VimPyServer.git
 ----
 
-That's it! Vim-PyServer will start for the first vim editor you use.
+That's it! VimPyServer will start for the first vim editor you use.
   If you open several vim editors, only the first one will be controlled
   by the PyServer. This will be changed later so any vim editor will have
   its own PyServer.
