@@ -1,10 +1,12 @@
-== VimPyServer.txt A Python server to remote control Vim from telnet or netcat
-== without X-Windows nor vim-server.
+== VimPyServer.txt A Python server to remote control Vim from telnet or netcat without X-Windows nor vim-server.
 
-Author:         Victor Polo de Gyves Montero <degyves@gmail.com>
-License:        BSD
-Website:        http://github.com/degyves/VimPyServer
-Version:        0.1
+Author:   Victor Polo de Gyves Montero <degyves@gmail.com>
+
+License:  BSD
+
+Website:  http://github.com/degyves/VimPyServer
+
+Version:  0.1
 
 === Contents
 
