@@ -5,7 +5,7 @@
 " Author: Victor Polo de Gyves Montero <degyves@gmail.com>
 " License: BSD
 " Website: http://github.com/degyves/VimPyServer
-" Version: 0.2
+" Version: 0.2.1
 " ===========================
 
 function! CloseVimPyServer()

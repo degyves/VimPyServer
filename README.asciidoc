@@ -6,7 +6,7 @@ License:  BSD
 
 Website:  http://github.com/degyves/VimPyServer
 
-Version:  0.2
+Version:  0.2.1
 
 === Contents
 

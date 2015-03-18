@@ -8,8 +8,19 @@ CLIENTHOST=localhost
 
 # Open a file on a single VimPyServer instance
 function openFile () {
-  FILE=$(cygpath -u "$1")
+  echo "$1"
+  if [[ "$1" = /* ]]; then
+    echo "Absolute *nix path"
+    FILE=$(cygpath -u "$1")
+  elif [[ "$1" = C:\\* ]] || [[ "$1" = c:\\* ]] ; then 
+    echo "Absolute windows path"
+    FILE=$(cygpath -u "$1")
+  else
+    echo "Relative path"
+    FILE=$(cygpath -u "$PWD/$1")
+  fi
   FILE_ESCAPED=$(printf "%q\n"  "$FILE")
+  echo "$FILE_ESCAPED"
   printf "e %s\n" "$FILE_ESCAPED" | nc $SERVERHOST $SERVERPORT
   if [ $? != 0 ]; then
     printf "%s" "Error. return not zero."
