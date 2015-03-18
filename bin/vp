@@ -1,0 +1,46 @@
+#!/bin/bash
+
+SERVERPORT=9876
+SERVERHOST=localhost
+CLIENTPORT=9875
+CLIENTHOST=localhost
+
+
+# Open a file on a single VimPyServer instance
+function openFile () {
+  FILE=$(cygpath -u "$1")
+  FILE_ESCAPED=$(printf "%q\n"  "$FILE")
+  printf "e %s\n" "$FILE_ESCAPED" | nc $SERVERHOST $SERVERPORT
+  if [ $? != 0 ]; then
+    printf "%s" "Error. return not zero."
+    vim "$FILE_ESCAPED"
+  fi
+}
+
+# Open several files on a single VimPyServer instance
+if [ $# -gt 0 ]; then
+  # printf  "Number or arguments: %i\n" $#
+  if [ "$1" = "-vimperator" ] && [ $# != 2 ]; then
+    printf "ERROR. vp with -vimperator requires one file argument.\n" 1>&2
+    exit 1
+  fi
+  if [ "$1" = "-vimperator" ] && [ $# = 2 ]; then
+    printf "VimPyServer in vimperator mode.\n"
+    printf "%s\n" "let g:vimperatorVimPyServer=1" |nc $SERVERHOST $SERVERPORT
+    openFile "$2"
+    # Repaint vim
+    printf "%s\n" "edit" | nc $SERVERHOST $SERVERPORT
+    # wait for ANY buffer write, then terminate 
+    printf "\n%s\n" "Wait for end of vimperator-mode..."
+    nc -l  $CLIENTPORT
+  else
+    printf "VimPyServer in multifile mode.\n"
+    for f in "$@"; do
+      openFile "$f"
+    done
+    # Repaint vim
+    printf "%s\n" "edit" | nc $SERVERHOST $SERVERPORT
+  fi
+fi
+  
+

@@ -1,4 +1,4 @@
-== VimPyServer.txt A Python server to remote control Vim from telnet or netcat without X-Windows nor vim-server.
+== VimPyServer: A fast, lightweight, embedded Python server to control remotely Vim from telnet or netcat without X-Windows nor vim-server.
 
 Author:   Victor Polo de Gyves Montero <degyves@gmail.com>
 
@@ -6,7 +6,7 @@ License:  BSD
 
 Website:  http://github.com/degyves/VimPyServer
 
-Version:  0.1
+Version:  0.2
 
 === Contents
 
@@ -18,47 +18,68 @@ Version:  0.1
 
 === 1. Intro
 
-This is a plugin for controlling your vim editor by starting a Python server
-inside it until you quit vim. This is an alternative to "vim -servername", 
-which I could not use on a terminal only environment. 
+This is a plugin to control your vim editor via telnet. It starts a Python 
+server inside Vim until you close the editor. This is an alternative to 
+"vim -servername", which I could not use on a terminal only environment 
+(it appears it requires X11). 
 
 Whit VimPyServer you can:
 
-Integrate your Cygwin-based Vim editor with Windows Explorer and edit every 
-  file on a single vim instance!
-
-Send commands to you current open vim editor from another terminal, 
+* Integrate the edition of every file on your computer (Windows explorer, 
+  Firefox, mutt, etc) on a single instance of Vim editor (cygwin based or not). 
+  No more copy-paste hell, no more vim editors open everywhere! See:
+**  xref:singleVimExplorer[]
+**  xref:singleVimVimperator[]
+**  xref:singleVimMutt[]
+* Have fun messing the code of your friends in their faces!
+** xref:vimChat[]
+* Send commands to you current open vim editor from another terminal, 
   even from another computer! 
-
-Remotely control your current open vim editor, integrate it on an IDE
+* Remotely control your current open vim editor, integrate it on an IDE
   automate actions!
 
 === 2. Requirements
 
-- VIM 7.4 with python and python3 (check it with vim --version)
-- Python 2.7.8 (Should work on Python 3. Please send me a message if you
-  test it with version 3.
+* VIM 7.4 with python and python3 (check it with vim --version)
+* Python 2.7.8 (Should work on Python 3. Please send me a message if you
+  test it with version 3).
+* netcat (nc) is needed temporary. Will be unnecessary on future releases.
 
 === 3. Installation
 
-Clone it to your .vim/bundle:
-  
+. If your are using pathogen just clone it to your `~/.vim/bundle`:
+
 ----
   git clone https://github.com/degyves/VimPyServer.git
 ----
 
-That's it! VimPyServer will start for the first vim editor you use.
+[start=2]
+. Set your environment variables and restart your terminals:
+** *_Under Windows_*: add VIMPYSERVER_HOME to your environment variables 
+  (WIN+Pause, advanced settings). The value will be the path, in Windows format,
+   of where you have cloned VimPyServer. Also add %VIMPYSERVER_HOME%\bin to your
+  Windows PATH. Do not configure these variables on `~/.bashrc`.
+** *_Under Linux/Mac_*: add VIMPYSERVER_HOME to your `~/.bashrc`. The value will
+  be the path where you have cloned VimPyServer. Also add $VIMPYSERVER_HOME\bin
+  to your PATH.
+** *_Under OpenBSD_*: add VIMPYSERVER_HOME to your `~/.profile`. The value will
+  be the path where you have cloned VimPyServer. Also add $VIMPYSERVER_HOME\bin
+  to your PATH.
+
+
+*That's it!* VimPyServer will own the first vim editor you use.
   If you open several vim editors, only the first one will be controlled
-  by the PyServer. This will be changed later so any vim editor will have
-  its own PyServer.
+  by the VimPyServer. This will be changed later so any vim editor will have
+  the ability to own (or not) its own VimPyServer.
 
 === 4. Usage
 
 You can send only one command per time. VimPyServer will remove spaces,
-newlines and tabs from the beginning and end of the command.
+newlines and tabs from the beginning and end of the command and send the 
+command to the Vim editor owning the server.
 
 Send a command from another terminal to your vim editor, 
-  controlled by VimPyServer. This will open ~/.bashrc.
+  controlled by VimPyServer. This will open `~/.bashrc`.
 
 ----
   $ echo "e ~/.bashrc" | nc localhost 9876
@@ -78,7 +99,8 @@ Turn on VimPyServer:
 
 === 5. Configuration
 
-The following variables can be set on your ~/.vimrc:
+The following variables can be set on your `~/.vimrc` but will need also to 
+modify the `VIMPYSERVER_HOME/bin/vp` script:
 
 Set this to disable the automatic start of VimPyServer:
 
@@ -97,3 +119,111 @@ Set this to change the default host ('127.0.0.1' by default). Must be string:
 ----
   let g:VimPyServer_host='127.0.0.1'
 ----
+
+In vimperator-mode (C-i over a text input), VimPyServer has to notify when 
+a buffer write has been made, so vimperator will update the text input. 
+A netcat in server mode will be listening '127.0.0.1', port 9875 until 
+VimPyServer connects to it to notify that a buffer write has happened. 
+Change these variables on `VIMPYSERVER_HOME/bin/vp` and in our `~/.vimrc`:
+
+----
+  let g:VimPyClient_port=9875
+  let g:VimPyClient_host='127.0.0.1'
+----
+
+This way, you can also connect two Vim instances, to chat with your friends
+or remotely edit buffers! See README.asciidoc for an example.
+
+=== 6. Examples
+
+[[singleVimExplorer]]
+==== Defaulting single Cygwin Vim instance with Windows Explorer "Open with..."
+
+Defaulting the text editor under windows directy to Cygwin Vim creates a lot
+of vim instances, one per each file. Why not edit all of your files on a 
+single instance? This wil make it easier share text between your buffers, and
+faster, since you need not to change to another window.
+
+. From Windows Explorer right-click on any file you want to edit. 
+  Select "Open with..." and navigate to select 
+  `$VIMPYSERVER_HOME/bin/VimPyServer.bat`
+. Now any file of this type you open with Explorer will be edited with the first
+  Vim instance owned by VimPyServer.
+
+
+[[singleVimVimperator]]
+==== Single Vim instance for Firefox + Vimperator
+
+Surely have you noticed that with Firefox + Vimperator that you can use Vim to
+edit any input box? Just go to google, focus the search input box and press C-i. 
+But wait, I don't wanna open a new terminal and waste my coveted RAM. And since
+I have already opened Vim + VimPyServer, why not use it? VimPyServer to the 
+rescue!
+
+* *_If you are on Windows_* edit your .vimperatorrc under 
+  `c:\Users\YourUsername\.vimperatorrc`) and add:
+
+----
+:set editor=c:/<YourCygwinUsersHome>/.vim/bundle/VimPyServer/bin/VimPyServer_Vimperator.bat
+----
+
+For example:
+
+----
+:set editor=c:/cygwin64/home/degyves/.vim/bundle/VimPyServer/bin/VimPyServer_Vimperator.bat
+----
+
+* *_If you follow the *nix way_*, edit your .vimperatorrc and add:
+
+----
+:set editor=/<YourUserHome>/.vim/bundle/VimPyServer/bin/VimPyServer_Vimperator.sh
+----
+
+For example:
+
+----
+:set editor=/home/degyves/.vim/bundle/VimPyServer/bin/VimPyServer_Vimperator.sh
+----
+
+
+[[singleVimMutt]]
+==== Single Vim instance for mutt (coming soon!)
+
+[[vimChat]]
+==== Chat with VimPyServer inside vim and share snippets of code with your buddies, easier than ever!
+
+. You run your Vim with VimPyServer on 192.168.1.2 port 9876.
+. Your buddy runs its VimPyServer also, but on 192.168.1.3 port 9876.
+. You target your VimPyClient variables, to your buddy's VimPyServer:
+
+----
+  let g:VimPyClient_port=9876
+  let g:VimPyClient_host='192.168.1.2'
+----
+
+[start=4]
+. Your buddy targets you:
+
+----
+  let g:VimPyClient_port=9876
+  let g:VimPyClient_host='192.168.1.3'
+----
+
+[start=5]
+. Now let the fun begin:
+
+----
+  :call VimPyServerMessageToClient("echom 'hey, wazzap!")
+----
+
+[start=6]
+. Read your buddies messages:
+
+----
+  :messages
+----
+
+* Coming soon: as any message is interpreted as an ex-command, you can also share 
+  blocks of text.
+
+

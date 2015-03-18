@@ -1,4 +1,4 @@
-*VimPyServer.txt* A Python server to remote control Vim from telnet or netcat.
+*VimPyServer.txt* Python server to remote control Vim from telnet or netcat.
 Author:         Victor Polo de Gyves Montero <degyves@gmail.com>
 License:        BSD
 Website:        http://github.com/degyves/VimPyServer
@@ -11,22 +11,38 @@ Contents                                      *VimPyServer* *VimPyServer.txt*
   3. Installation .. |VimPyServer-installation|
   4. Usage ......... |VimPyServer-usage|
   5. Configuration . |VimPyServer-configuration|
+  6. Examples ...... |VimPyServer-examples|
 
 =============================================================================
 1. Intro                                      *VimPyServer-intro* 
 
-This is a plugin for controlling your vim editor by starting a Python server
+This is a plugin to remote control your vim editor by starting a Python server
 inside it until you quit vim. This is an alternative to "vim -servername", 
-which I could not use on a terminal only environment. 
+which I could not use on a terminal only environment. It is expected
+to be faster and with less memory footprint than the X-server
+version. 
 
 Whit VimPyServer you can:
 
-- Integrate your Cygwin-based Vim editor with Windows Explorer and edit every 
-  file on a single vim instance!
-- Send commands to you current open vim editor from another terminal, 
+* Integrate the edition of every file on your computer (Windows explorer, 
+  Firefox, mutt, etc) on a single instance of Vim editor (cygwin based or not). 
+  No more copy-paste hell, no more vim editors open everywhere! 
+  See the README.asciidoc to examples of:
+
+    ** Defaulting single Cygwin Vim instance with Windows Explorer "Open with"
+    ** Single Vim instance for Firefox + Vimperator
+    ** Single Vim instance for mutt (coming soon!)
+
+* Have fun messing the code of your friends in their faces!
+
+    ** Chat with VimPyServer inside vim and share snippets of code with your 
+  buddies, easier than ever! - see the README.asciidoc
+
+* Send commands to you current open vim editor from another terminal, 
   even from another computer! 
-- Remotely control your current open vim editor, integrate it on an IDE
+* Remotely control your current open vim editor, integrate it on an IDE
   automate actions!
+
 
 =============================================================================
 2. Requirements                               *VimPyServer-requirements* 
@@ -34,6 +50,8 @@ Whit VimPyServer you can:
 - VIM 7.4 with python and python3 (check it with vim --version)
 - Python 2.7.8 (Should work on Python 3. Please send me a message if you
   test it with version 3.
+- for the time being, netcat (nc) is required. Future versions won't need
+  it.
 
 =============================================================================
 3. Installation                               *VimPyServer-installation* 
@@ -42,10 +60,23 @@ Whit VimPyServer you can:
   
   git clone https://github.com/degyves/VimPyServer.git
 
-- That's it! VimPyServer will start for the first vim editor you use.
+- Set your environment variables and restart your terminals:
+
+** Under Windows: add VIMPYSERVER_HOME to your environment variables 
+  (WIN+Pause, advanced settings). The value will be the path, in Windows format,
+   of where you have cloned VimPyServer. Also add %VIMPYSERVER_HOME%\bin to your
+  Windows PATH. Do not configure these variables on `~/.bashrc`.
+** Under Linux/Mac: add VIMPYSERVER_HOME to your `~/.bashrc`. The value will
+  be the path where you have cloned VimPyServer. Also add $VIMPYSERVER_HOME\bin
+  to your PATH.
+** Under OpenBSD: add VIMPYSERVER_HOME to your `~/.profile`. The value will
+  be the path where you have cloned VimPyServer. Also add $VIMPYSERVER_HOME\bin
+  to your PATH.
+
+- That's it!* VimPyServer will own the first vim editor you use.
   If you open several vim editors, only the first one will be controlled
-  by the PyServer. This will be changed later so any vim editor will have
-  its own PyServer.
+  by the VimPyServer. This will be changed later so any vim editor will have
+  its own VimPyServer.
 
 =============================================================================
 4. Usage                                      *VimPyServer-usage* 
@@ -81,6 +112,10 @@ The following variables can be set on your ~/.vimrc:
 
 - Set this to change the default host ('127.0.0.1' by default). Must be string:
 
-  let g:VimPyServer_host='127.0.0.1'
+=============================================================================
+6. Examples                                   *VimPyServer-examples* 
+
+  Please read the README.asciidoc or https://github.com/degyves/VimPyServer
+for examples.
 
 vim: tw=78 ts=8 sw=4 sts=4 et ft=help
