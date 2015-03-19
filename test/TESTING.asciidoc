@@ -1,0 +1,55 @@
+- *The script bin/vp is the wrapper used to open a file remotely on 
+ a Vim+VimPyEditor.*
+
+- *Start screen. Split the screen in two windows. Start vim on a window. We call this window shell-0. The other window will be shell-1.*
+
+1. From another shell, open a file with "vp" passing a relative path.
+
+** Pass: The file is opened on shell-0.
+
+2. From another shell, open the same file with "vp", passing an absolute path.
+
+** Pass: The file is opened on shell0.
+
+3. From Firefix+Vimperator, go to www.google.com, then write "cow cat dog" and
+ press C-i.
+ 
+** Pass: A file is created and opened on shell-0, containing the text
+ "cow dog".
+
+4. From test 3, modify the text on shell-0, so that it says: "a cow eat dog".
+ Save it (:w).
+
+** Pass:  The google search textbox is updated to "a cow eat dog".
+
+5. Start another vim on shell-1. Execute these commands in normal mode:
+
+----
+  :let VimPyServer_port=9875
+  :let VimPyClient_port=9876
+  :call OpenVimPyServer()
+  :messages
+----
+
+** Pass: The messages on shell-1 show that another VimPyServer is started.
+
+[start=6]
+. Change to shell-0. Execute in normal mode:
+
+----
+  :call VimPyServerMessageToClient("echom 'hey, wazzap'")
+----
+
+** Pass: Change to shell-1 and execute :messages . The message sent from
+ shell-0 appears.
+
+[start=7]
+. From shell-1 execute:
+
+----
+ :call VimPyServerMessageToClient("echom 'Watch the nginx vs httpd deathmatch'")
+----
+
+** Pass: Change to shell-0 and execute :messages . The message sent from
+ shell-0 appears.
+
