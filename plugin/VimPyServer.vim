@@ -143,7 +143,7 @@ end
 
 function! g:CheckIfVimperatorVimPyServer()
 	if exists("g:vimperatorVimPyServer")
-		if g:vimperatorVimPyServer==1
+		if g:vimperatorVimPyServer>=1
 			call VimPyServerMessageToClient('End Vimperator mode\n')
 			let g:vimperatorVimPyServer=0
 		endif

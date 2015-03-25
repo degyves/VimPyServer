@@ -1,2 +1,2 @@
 #!/bin/bash
-$VIMPYSERVER_HOME/bin/vp -vimperator $1 
+$VIMPYSERVER_HOME/bin/vp -wait $1 
